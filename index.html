@@ -610,6 +610,13 @@ function calculateTax(salary) {
 
 
 
+function truncateCompanyName(name, maxLength = 15) {
+    if (name.length <= maxLength) {
+        return name;
+    }
+    return name.substr(0, maxLength - 3) + '...';
+}
+
 </script>
 
 
