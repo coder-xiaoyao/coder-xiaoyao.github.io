@@ -1,1 +1,617 @@
-1111
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<!-- <meta name="apple-mobile-web-app-status-bar-style" content="default"> -->
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+
+
+    <title>收入纳税明细</title>
+    <style>
+
+
+
+
+
+
+
+
+body, html {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+
+
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+
+
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+
+.fixed-header {
+    background-color: white;
+    z-index: 1;
+}
+
+
+.scrollable-content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    background-color: #F4F6F9;
+}
+
+
+.content, .fixed-header, .item {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.scrollable-content::-webkit-scrollbar {
+    display: none;
+}
+.scrollable-content {
+    scrollbar-width: none;
+}
+
+
+
+
+
+        .content-wrapper::-webkit-scrollbar {
+            display: none; /* Chrome, Safari 和 Opera */
+        }
+
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: #000;
+            font-size: 16px;
+            line-height: 1.4;
+            -webkit-font-smoothing: antialiased;
+            padding-top: env(safe-area-inset-top);
+        }
+
+        .nav-bar {
+            background-color: #ffffff;
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #E3E4E8;
+            font-weight: 400;
+/*            padding-top: calc(10px + env(safe-area-inset-top));*/
+/*            background-color: rgba(242, 242, 247, 0.8);*/
+        }
+
+
+
+
+        /* 下划线 */
+        .underline {
+            position: relative;
+        }
+
+        .underline::after {
+            content: '';
+            position: absolute;
+            left: 16px;
+            right: 16px;
+            bottom: 0;
+            height: 0.5px; /* 减小下划线的粗细 */
+            background-color: #e0e0e0; /* 调整下划线颜色为更浅的灰色 */
+        }
+
+
+        .item {
+            margin-top: 10px;
+            background-color: #ffffff;
+            padding: 15px 16px;
+/*            border-bottom: 1px solid #c8c7cc;*/
+        }
+
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            margin-right: 50px;
+            font-size: 17px;
+            font-weight: 400;
+        }
+
+        .item-amount {
+            color: #999DA6;
+            display: flex;
+            justify-content: space-between;
+            font-size: 15px;
+            margin-top: 6px;
+        }
+
+        .blue-text {
+            color: #4285F4;
+            font-size: 14px;
+        }
+
+        .gray-text {
+            color: #8e8e93;
+        }
+
+        /* 灰色分割 */
+        .grey-background {
+            background-color: #F4F6F9;
+            width: 100vw; /* 视窗宽度 */
+            height: 10px; /* 根据需要调整高度 */
+            margin: 0;
+/*            border-top: 1px solid #e5e5e5; /* 根据需要添加边框 */*/
+/*            border-bottom: 1px solid #e5e5e5; /* 根据需要添加边框 */*/
+/*                width: 100%;*/
+            box-sizing: border-box;
+        }
+
+/*返回图标*/
+.back-icon {
+    color: #007AFF; /* iOS 蓝色 */
+/*    font-size: 14px;*/
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.back-icon::before {
+    content: '';
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-left: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+/*    margin-right: 5px;*/
+}
+
+
+
+
+
+.question-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    margin-left: 6px;
+    margin-right: 4px;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 1px solid #007aff;
+    color: #007aff;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+
+
+.total {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 16px;
+    font-size: 17px;
+    align-items: center;
+    color: #000000; /* 调整为纯黑色 */
+    font-weight: 400; /* 调整字体粗细 */
+}
+
+.total-left {
+    display: flex;
+    align-items: center;
+}
+
+.total-right {
+    text-align: right;
+    font-weight: 400; /* 保持与左侧文字相同的粗细 */
+}
+
+/*.question-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px; /* 稍微增加大小 */
+    height: 15px;
+    margin-left: 8px;
+    margin-right: 6px;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 1px solid #007aff;
+    color: #007aff;
+    font-size: 13px; /* 稍微增加字体大小 */
+    font-weight: normal; /* 调整字体粗细 */
+}*/
+
+
+.question-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    margin-left: 6px;
+    margin-right: 4px;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 1px solid #007aff;
+    color: #007aff;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+
+
+
+
+
+.item-details {
+    color: #999DA6;
+    font-size: 15px;
+    margin-bottom: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.company-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.company-name {
+    margin-left: 5px; /* 调整这个值以获得合适的间距 */
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.arrow-icon {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-top: 1.5px solid #999DA6;
+    border-right: 1.5px solid #999DA6;
+    transform: rotate(45deg);
+    margin-left: 5px;
+    flex-shrink: 0;
+}
+
+
+
+
+/*弹窗*/
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 300px;
+}
+
+.modal-content input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    box-sizing: border-box;
+}
+
+.modal-content button {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+}
+
+
+
+    </style>
+</head>
+<body>
+
+
+<div class="content-wrapper">
+    <div class="nav-bar">
+        <span class="blue-text back-icon">返回</span>
+        <span>收入纳税明细</span>
+        <span class="blue-text">批量申诉</span>
+    </div>
+    
+    <div class="grey-background"></div>
+
+    <div class="content">
+        <div class="fixed-header">
+            <!-- 固定头部内容（收入合计和已申报税额合计） -->
+            <div class="total underline">
+                <div class="total-left">
+                    <div>收入合计<span class="question-mark">?</span>：</div>
+                </div>
+                <div class="total-right">
+                    <div>0.00元</div>
+                </div>
+            </div>
+            <div class="total">
+                <div class="total-left">
+                    <div>已申报税额合计：</div>
+                </div>
+                <div class="total-right">
+                    <div>0.00元</div>
+                </div>
+            </div>
+        </div>
+        <div class="scrollable-content" id="itemContainer">
+            <!-- 可滚动的项目列表 -->
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+<!-- 弹窗 -->
+
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <h2>输入工资、税额和公司名称</h2>
+        <select id="yearSelect">
+            <!-- 年份选项将通过 JavaScript 动态添加 -->
+        </select>
+        <input type="number" id="salaryInput" placeholder="输入工资（必填）" required>
+        <input type="number" id="taxInput" placeholder="输入税额（可选，留空自动计算）">
+        <input type="text" id="companyInput" placeholder="输入公司名称（可选）">
+        <button id="confirmBtn">确定</button>
+        <button id="cancelBtn">取消</button>
+    </div>
+</div>
+
+
+
+
+</body>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const itemContainer = document.getElementById('itemContainer');
+    const yearSelect = document.getElementById('yearSelect');
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const lastMonth = currentDate.getMonth() - 1; // 0-11，减1表示上个月
+
+    // 添加年份选项
+    for (let year = currentYear; year >= currentYear - 5; year--) {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        yearSelect.appendChild(option);
+    }
+
+    function generateItems(year) {
+        itemContainer.innerHTML = ''; // 清空现有的 items
+        const monthLimit = year === currentYear ? lastMonth : 11; // 如果是当前年，只生成到上个月
+
+        for (let i = monthLimit; i >= 0; i--) {
+            const itemDate = new Date(year, i, 1);
+            const itemHtml = `
+                <div class="item">
+                    <div class="item-header">
+                        <span>工资薪金</span>
+                        <span class="item-date">${itemDate.getFullYear()}-${String(itemDate.getMonth() + 1).padStart(2, '0')}</span>
+                    </div>
+                    <div class="item-details">所得项目小类：正常工资薪金</div>
+                    <div class="item-details">
+                        <div class="company-container">
+                            扣缴义务人：<span class="company-name">成都智慧云视科技有限公司</span>
+                        </div>
+                        <span class="arrow-icon"></span>
+                    </div>
+                    <div class="item-amount">
+                        <span>收入：0.00元</span>
+                    </div>
+                    <div class="item-amount">
+                        <span>已申报税额：0.00元</span>
+                    </div>
+                </div>
+            `;
+            itemContainer.innerHTML += itemHtml;
+        }
+    }
+
+    // 初始生成当前年份的 items
+    generateItems(currentYear);
+
+    // 年份选择变化时重新生成 items
+    yearSelect.addEventListener('change', function() {
+        generateItems(parseInt(this.value));
+    });
+
+    // 获取模态框元素
+    const modal = document.getElementById('myModal');
+    const confirmBtn = document.getElementById('confirmBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const salaryInput = document.getElementById('salaryInput');
+    const taxInput = document.getElementById('taxInput');
+    const companyInput = document.getElementById('companyInput');
+
+    // 显示模态框
+    modal.style.display = "block";
+
+    // 确认按钮点击事件
+    confirmBtn.onclick = function() {
+        const salary = parseFloat(salaryInput.value);
+        let tax = parseFloat(taxInput.value);
+        const company = companyInput.value.trim();
+        const selectedYear = parseInt(yearSelect.value);
+
+        if (!isNaN(salary)) {
+            if (isNaN(tax)) {
+                // 如果没有输入税额，自动计算
+                tax = calculateTax(salary);
+            }
+            updateItems(salary.toFixed(2), tax, company, selectedYear);
+            modal.style.display = "none";
+        } else {
+            alert("请输入有效的工资");
+        }
+    }
+
+    // 取消按钮点击事件
+    cancelBtn.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // 点击模态框外部关闭
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+});
+
+function updateItems(salary, tax, company, year) {
+    const items = document.querySelectorAll('.scrollable-content .item');
+    const currentDate = new Date();
+    const monthLimit = year === currentDate.getFullYear() ? currentDate.getMonth() : 12;
+
+    items.forEach((item, index) => {
+        if (index < monthLimit) {
+            const incomeSpan = item.querySelector('.item-amount:nth-child(4) span');
+            const taxSpan = item.querySelector('.item-amount:nth-child(5) span');
+            const companyDetails = item.querySelector('.item-details:nth-child(3)');
+
+            if (incomeSpan) incomeSpan.textContent = `收入：${salary}元`;
+            if (taxSpan) taxSpan.textContent = `已申报税额：${tax}元`;
+            if (companyDetails && company) {
+                const truncatedCompany = truncateCompanyName(company);
+                const companyNameSpan = companyDetails.querySelector('.company-name');
+                if (companyNameSpan) companyNameSpan.textContent = truncatedCompany;
+            }
+        }
+    });
+
+    updateTotals(year);
+}
+
+function updateTotals(year) {
+    const items = document.querySelectorAll('.scrollable-content .item');
+    const currentDate = new Date();
+    const monthLimit = year === currentDate.getFullYear() ? currentDate.getMonth() : 12;
+    
+    let totalIncome = 0;
+    let totalTax = 0;
+    
+    items.forEach((item, index) => {
+        if (index < monthLimit) {
+            const incomeSpan = item.querySelector('.item-amount:nth-child(4) span');
+            const taxSpan = item.querySelector('.item-amount:nth-child(5) span');
+            
+            if (incomeSpan && taxSpan) {
+                const income = parseFloat(incomeSpan.textContent.split('：')[1]);
+                const tax = parseFloat(taxSpan.textContent.split('：')[1]);
+                
+                if (!isNaN(income)) totalIncome += income;
+                if (!isNaN(tax)) totalTax += tax;
+            }
+        }
+    });
+
+    const totalIncomeElement = document.querySelector('.fixed-header .total:nth-child(1) .total-right div');
+    if (totalIncomeElement) {
+        totalIncomeElement.textContent = totalIncome.toFixed(2) + '元';
+    }
+
+    const totalTaxElement = document.querySelector('.fixed-header .total:nth-child(2) .total-right div');
+    if (totalTaxElement) {
+        totalTaxElement.textContent = totalTax.toFixed(2) + '元';
+    }
+}
+
+
+
+
+
+
+
+//税率计算
+function calculateTax(salary) {
+    // 这里使用简化的个人所得税计算方法
+    // 您可以根据实际需求调整计算逻辑
+    const threshold = 5000; // 起征点
+    const taxableIncome = Math.max(salary - threshold, 0);
+    let tax = 0;
+
+    if (taxableIncome <= 3000) {
+        tax = taxableIncome * 0.03;
+    } else if (taxableIncome <= 12000) {
+        tax = taxableIncome * 0.1 - 210;
+    } else if (taxableIncome <= 25000) {
+        tax = taxableIncome * 0.2 - 1410;
+    } else if (taxableIncome <= 35000) {
+        tax = taxableIncome * 0.25 - 2660;
+    } else if (taxableIncome <= 55000) {
+        tax = taxableIncome * 0.3 - 4410;
+    } else if (taxableIncome <= 80000) {
+        tax = taxableIncome * 0.35 - 7160;
+    } else {
+        tax = taxableIncome * 0.45 - 15160;
+    }
+
+    return Math.max(tax, 0).toFixed(2);
+}
+
+
+
+</script>
+
+
+
+</html>
