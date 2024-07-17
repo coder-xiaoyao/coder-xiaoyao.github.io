@@ -33,6 +33,10 @@ body, html {
 
 
 
+
+
+
+
 .content-wrapper {
     display: flex;
     flex-direction: column;
@@ -63,6 +67,8 @@ body, html {
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
     background-color: #F4F6F9;
+    padding-bottom: 20px; /* 增加底部内边距 */
+    margin-bottom: 20px; /* 添加这一行 */
 }
 
 
@@ -331,6 +337,11 @@ body, html {
 }
 
 
+.bottomSpacing{
+    width: 100%;
+    height: 20px;
+}
+
 
     </style>
 </head>
@@ -369,6 +380,7 @@ body, html {
         <div class="scrollable-content" id="itemContainer">
             <!-- 可滚动的项目列表 -->
         </div>
+        <div class="bottomSpacing"></div>
     </div>
 </div>
 
