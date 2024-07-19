@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>九宫格主页</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            position: fixed;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
+        .grid-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-content: space-between;
+            width: 90vmin;
+            height: 90vmin;
+            max-width: 300px;
+            max-height: 300px;
+        }
+        .grid-item {
+            width: 32%;
+            height: 32%;
+            background-color: #3498db;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+            color: white;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .grid-item:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-container">
+        <a href="coder-xiaoyao.github.io/gs.html" class="grid-item">个税</a>
+        <a href="https://example2.com" class="grid-item">链接2</a>
+        <a href="https://example3.com" class="grid-item">链接3</a>
+        <a href="https://example4.com" class="grid-item">链接4</a>
+        <a href="https://example5.com" class="grid-item">链接5</a>
+        <a href="https://example6.com" class="grid-item">链接6</a>
+        <a href="https://example7.com" class="grid-item">链接7</a>
+        <a href="https://example8.com" class="grid-item">链接8</a>
+        <a href="https://example9.com" class="grid-item">链接9</a>
+    </div>
+</body>
+</html>
